@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb/page/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mealdb/model/login_model.dart';
 
 String loginBox = 'loginBox';
 
@@ -55,12 +53,7 @@ class LogoutPage extends StatelessWidget {
 
     // Clear shared preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-
-    // Clear Hive box
-    var box = Hive.box<LoginModel>(loginBox);
-    await box.clear();
-    await box.close();
+    await prefs.setBool('isLoggedIn', false);
 
     print('Navigating to LoginPage');
     Navigator.pushAndRemoveUntil(

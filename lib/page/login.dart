@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passController = TextEditingController();
 
   late SharedPreferences loginData;
-  late bool newUser;
+  late bool isLoggedIn;
 
   @override
   void initState() {
@@ -28,10 +28,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void checkIfAlreadyLoggedIn() async {
     loginData = await SharedPreferences.getInstance();
-    newUser = (loginData.getBool('login') ?? true);
-    print("new user = $newUser");
-    if (!newUser) {
-      // Uncomment the following lines if HomePage is available
+    isLoggedIn = (loginData.getBool('isLoggedIn') ?? false);
+    print("isLoggedIn = $isLoggedIn");
+    if (isLoggedIn) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -119,33 +118,37 @@ class _LoginPageState extends State<LoginPage> {
                     String pass = passController.text;
                     var box = Hive.box<LoginModel>(loginBox);
 
+                    bool loginSuccess = false;
                     for (var item in box.values) {
                       if (item.username == user && item.password == pass) {
                         print("LOGIN SUCCESSFUL");
-                        loginData.setBool('login', false);
+                        loginData.setBool('isLoggedIn', true);
                         loginData.setString('username', user);
-                        // Uncomment the following lines if HomePage is available
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
                         );
-                        return;
+                        loginSuccess = true;
+                        break;
                       }
                     }
 
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Error'),
-                        content: const Text('Incorrect username or password.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
+                    if (!loginSuccess) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Error'),
+                          content:
+                              const Text('Incorrect username or password.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                   child: const Text('Login'),
                 ),
@@ -156,7 +159,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Uncomment the following lines if RegisterPage is available
                     Navigator.push(
                       context,
                       MaterialPageRoute(
