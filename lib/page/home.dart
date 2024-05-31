@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb/model/lookup_model.dart'; // Import LookupModel
+import 'package:mealdb/page/camera.dart';
 import 'package:mealdb/page/favorite.dart';
 import 'package:mealdb/page/list_area.dart';
 import 'package:mealdb/page/list_category.dart';
@@ -60,10 +61,16 @@ class _HomePageState extends State<HomePage> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => ImagePickDemo()),
         );
         break;
       case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 3:
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => LogoutPage()),
@@ -85,7 +92,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.brown,
-        title: Text('Meals'),
+        title: Text(
+          'Meals',
+          style: TextStyle(color: Colors.white),
+        ),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(48.0),
           child: Padding(
@@ -175,19 +185,26 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorite',
-            backgroundColor: Colors.brown,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            label: 'Camera',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
-            backgroundColor: Colors.brown,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.logout),
             label: 'Logout',
-            backgroundColor: Colors.brown,
           ),
         ],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        backgroundColor: Colors.brown,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed, // Ensure labels are always shown
       ),
     );
   }
