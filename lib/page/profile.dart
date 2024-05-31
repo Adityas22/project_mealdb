@@ -17,15 +17,15 @@ class ProfilePage extends StatelessWidget {
             color: Colors.orange, // Warna latar belakang widget
           ),
           ProfileMember(
-            name: 'Jane Smith',
-            nim: '987654321',
-            photoUrl: 'https://via.placeholder.com/150', // URL foto
+            name: 'Muhammad Ihsanuddin',
+            nim: '123210039',
+            photoUrl: 'assets/ihsan.jpeg', // URL foto
             color: Colors.green, // Warna latar belakang widget
           ),
           ProfileMember(
-            name: 'Alice Johnson',
-            nim: '246813579',
-            photoUrl: 'https://via.placeholder.com/150', // URL foto
+            name: 'Husnan Maulana Suprayitno',
+            nim: '123210105',
+            photoUrl: 'assets/husnan.jpeg', // URL foto
             color: Colors.purple, // Warna latar belakang widget
           ),
         ],
@@ -57,7 +57,7 @@ class ProfileMember extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 50.0,
-            backgroundImage: NetworkImage(photoUrl),
+            backgroundImage: AssetImage(photoUrl), // Change to AssetImage
           ),
           SizedBox(height: 10.0),
           Text(

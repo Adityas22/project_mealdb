@@ -1,3 +1,4 @@
+// lookup_category.dart
 import 'package:flutter/material.dart';
 import 'package:mealdb/model/lookup_model.dart';
 import 'package:mealdb/page/home.dart';
@@ -15,6 +16,7 @@ class LookupCategoryPage extends StatefulWidget {
 
 class _LookupCategoryPageState extends State<LookupCategoryPage> {
   bool isFavorite = false;
+  late String username;
 
   @override
   void initState() {
@@ -24,8 +26,9 @@ class _LookupCategoryPageState extends State<LookupCategoryPage> {
 
   _loadFavoriteStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    username = prefs.getString('username') ?? '';
     setState(() {
-      isFavorite = prefs.getBool(widget.idMeal) ?? false;
+      isFavorite = prefs.getBool('$username-${widget.idMeal}') ?? false;
     });
   }
 
@@ -33,7 +36,7 @@ class _LookupCategoryPageState extends State<LookupCategoryPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       isFavorite = !isFavorite;
-      prefs.setBool(widget.idMeal, isFavorite);
+      prefs.setBool('$username-${widget.idMeal}', isFavorite);
     });
   }
 
@@ -74,73 +77,49 @@ class _LookupCategoryPageState extends State<LookupCategoryPage> {
                             fit: BoxFit.cover),
                       ),
                     SizedBox(height: 16.0),
-                    Text(
-                      meal.strMeal ?? 'No name',
-                      style: TextStyle(
-                          fontSize: 24.0, fontWeight: FontWeight.bold),
-                    ),
+                    Text(meal.strMeal ?? 'No name',
+                        style: TextStyle(
+                            fontSize: 24.0, fontWeight: FontWeight.bold)),
                     SizedBox(height: 16.0),
-                    Text(
-                      'Category: ${meal.strCategory ?? 'N/A'}',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    Text(
-                      'Area: ${meal.strArea ?? 'N/A'}',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
+                    Text('Category: ${meal.strCategory ?? 'N/A'}',
+                        style: TextStyle(fontSize: 18.0)),
+                    Text('Area: ${meal.strArea ?? 'N/A'}',
+                        style: TextStyle(fontSize: 18.0)),
                     SizedBox(height: 16.0),
-                    Text(
-                      'Instructions:',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      meal.strInstructions ?? 'No instructions',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
+                    Text('Instructions:',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold)),
+                    Text(meal.strInstructions ?? 'No instructions',
+                        style: TextStyle(fontSize: 16.0)),
                     SizedBox(height: 16.0),
                     if (meal.strYoutube != null)
-                      Text(
-                        'YouTube: ${meal.strYoutube}',
-                        style: TextStyle(fontSize: 16.0, color: Colors.blue),
-                      ),
+                      Text('YouTube: ${meal.strYoutube}',
+                          style: TextStyle(fontSize: 16.0, color: Colors.blue)),
                     SizedBox(height: 16.0),
-                    Text(
-                      'Ingredients:',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    ...List.generate(
-                      20,
-                      (index) {
-                        final ingredient =
-                            meal.toJson()['strIngredient${index + 1}'];
-                        final measure = meal.toJson()['strMeasure${index + 1}'];
-                        if (ingredient != null && ingredient.isNotEmpty) {
-                          return Text('$ingredient: $measure');
-                        }
-                        return SizedBox.shrink();
-                      },
-                    ),
-                    SizedBox(height: 50.0), // Added SizedBox for spacing
+                    Text('Ingredients:',
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold)),
+                    ...List.generate(20, (index) {
+                      final ingredient =
+                          meal.toJson()['strIngredient${index + 1}'];
+                      final measure = meal.toJson()['strMeasure${index + 1}'];
+                      if (ingredient != null && ingredient.isNotEmpty) {
+                        return Text('$ingredient: $measure');
+                      }
+                      return SizedBox.shrink();
+                    }),
+                    SizedBox(height: 50.0),
                     Center(
                       child: TextButton(
                         onPressed: () {
                           Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
                         },
-                        child: Container(
-                          color: Colors
-                              .indigoAccent, // Memberikan warna latar belakang
-                          child: Text(
-                            'Back to home...',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                        child: Text('Back to Home',
+                            style:
+                                TextStyle(fontSize: 16.0, color: Colors.blue)),
                       ),
                     ),
                   ],

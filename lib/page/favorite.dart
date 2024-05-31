@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mealdb/model/lookup_model.dart';
+import 'package:mealdb/page/lookup_area.dart';
 import 'package:mealdb/service/api_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,26 +10,37 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  List<String> favoriteMeals = [];
+  List<Meals> favoriteMeals = [];
+  late String username;
 
   @override
   void initState() {
     super.initState();
-    _loadFavorites();
+    _loadFavoriteMeals();
   }
 
-  _loadFavorites() async {
+  _loadFavoriteMeals() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      favoriteMeals = prefs.getKeys().toList();
-    });
-  }
+    username = prefs.getString('username') ?? '';
+    Set<String> keys = prefs.getKeys();
+    List<String> userFavoriteMeals = keys
+        .where(
+            (key) => key.startsWith('$username-') && prefs.getBool(key) == true)
+        .map((key) => key.split('-')[1])
+        .toList();
 
-  _removeFromFavorites(String idMeal) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      prefs.remove(idMeal);
-      favoriteMeals.remove(idMeal);
+    List<Future<LookupModel>> futureMeals = userFavoriteMeals.map((id) {
+      return ApiDataSource().lookupMealsById(id);
+    }).toList();
+
+    Future.wait(futureMeals).then((List<LookupModel> mealsList) {
+      List<Meals> meals = mealsList.map((lookupModel) {
+        return lookupModel.meals![0];
+      }).toList();
+
+      setState(() {
+        favoriteMeals = meals;
+      });
     });
   }
 
@@ -39,48 +51,32 @@ class _FavoritePageState extends State<FavoritePage> {
         title: Text('Favorite Meals'),
         backgroundColor: Colors.brown,
       ),
-      body: ListView.builder(
-        itemCount: favoriteMeals.length,
-        itemBuilder: (context, index) {
-          String idMeal = favoriteMeals[index];
-          return FutureBuilder<LookupModel>(
-            future: ApiDataSource().lookupMealsById(idMeal),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (snapshot.hasData &&
-                  snapshot.data!.meals != null &&
-                  snapshot.data!.meals!.isNotEmpty) {
-                Meals meal = snapshot.data!.meals![0];
+      body: favoriteMeals.isEmpty
+          ? Center(child: Text('No favorite meals'))
+          : ListView.builder(
+              itemCount: favoriteMeals.length,
+              itemBuilder: (context, index) {
+                Meals meal = favoriteMeals[index];
                 return ListTile(
-                  title: Text(meal.strMeal ?? 'No name'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Tag: ${meal.strTags ?? 'Not found'}'),
-                      Text('Youtube: ${meal.strYoutube ?? 'Not found'}'),
-                    ],
-                  ),
                   leading: meal.strMealThumb != null
-                      ? Image.network(meal.strMealThumb!)
-                      : null,
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      _removeFromFavorites(idMeal);
-                    },
-                  ),
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(meal.strMealThumb!),
+                        )
+                      : CircleAvatar(),
+                  title: Text(meal.strMeal ?? 'Unknown'),
+                  subtitle: Text(meal.strSource ?? 'Unknown'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            LookupAreaPage(idMeal: meal.idMeal ?? ''),
+                      ),
+                    );
+                  },
                 );
-              } else {
-                return SizedBox
-                    .shrink(); // Return an empty container if no data is available
-              }
-            },
-          );
-        },
-      ),
+              },
+            ),
     );
   }
 }
