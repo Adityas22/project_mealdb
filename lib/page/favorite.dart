@@ -44,6 +44,12 @@ class _FavoritePageState extends State<FavoritePage> {
     });
   }
 
+  _removeFavorite(String mealId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('$username-$mealId', false);
+    _loadFavoriteMeals();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +71,12 @@ class _FavoritePageState extends State<FavoritePage> {
                       : CircleAvatar(),
                   title: Text(meal.strMeal ?? 'Unknown'),
                   subtitle: Text(meal.strSource ?? 'Unknown'),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _removeFavorite(meal.idMeal ?? '');
+                    },
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
