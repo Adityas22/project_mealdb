@@ -25,8 +25,17 @@ class _FilterCategoryPageState extends State<FilterCategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meals for ${widget.category}'),
+        title: Text(
+          'Meals for ${widget.category}',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<FilterCategoryModel>(
         future: _futureFilteredMeals,

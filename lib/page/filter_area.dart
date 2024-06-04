@@ -12,8 +12,17 @@ class FilterAreaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meals in $area'),
+        title: Text(
+          'Meals in $area',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<FilterAreaModel>(
         future: ApiDataSource().filterArea(area),

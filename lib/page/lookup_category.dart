@@ -1,4 +1,3 @@
-// lookup_category.dart
 import 'package:flutter/material.dart';
 import 'package:mealdb/model/lookup_model.dart';
 import 'package:mealdb/page/home.dart';
@@ -51,6 +50,12 @@ class _LookupCategoryPageState extends State<LookupCategoryPage> {
           ),
         ],
         backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<LookupModel>(
         future: ApiDataSource().lookupMealsById(widget.idMeal),
@@ -118,8 +123,8 @@ class _LookupCategoryPageState extends State<LookupCategoryPage> {
                                   builder: (context) => HomePage()));
                         },
                         child: Text('Back to Home',
-                            style:
-                                TextStyle(fontSize: 16.0, color: Colors.blue)),
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.purple)),
                       ),
                     ),
                   ],

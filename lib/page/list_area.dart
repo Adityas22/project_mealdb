@@ -21,8 +21,17 @@ class _ListAreaPageState extends State<ListAreaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Area'),
+        title: Text(
+          'Area',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<ListAreaModel>(
         future: _futureListArea,

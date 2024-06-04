@@ -51,7 +51,6 @@ class LogoutPage extends StatelessWidget {
   void _logout(BuildContext context) async {
     print('Logout started');
 
-    // Clear shared preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', false);
 

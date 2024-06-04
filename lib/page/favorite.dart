@@ -54,8 +54,17 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorite Meals'),
+        title: Text(
+          "Favorite",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: favoriteMeals.isEmpty
           ? Center(child: Text('No favorite meals'))

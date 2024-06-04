@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mealdb/model/lookup_model.dart'; // Import LookupModel
+import 'package:mealdb/model/lookup_model.dart';
 import 'package:mealdb/page/camera.dart';
 import 'package:mealdb/page/favorite.dart';
 import 'package:mealdb/page/list_area.dart';
@@ -96,22 +96,6 @@ class _HomePageState extends State<HomePage> {
           'Meals',
           style: TextStyle(color: Colors.white),
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search meals...',
-                border: InputBorder.none,
-                filled: true,
-                fillColor: Colors.white,
-                prefixIcon: Icon(Icons.search),
-              ),
-            ),
-          ),
-        ),
       ),
       drawer: Drawer(
         child: ListView.builder(
@@ -128,14 +112,12 @@ class _HomePageState extends State<HomePage> {
                     );
                     break;
                   case 'category':
-                    // Navigasi ke halaman kategori
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ListCategory()),
                     );
                     break;
                   case 'ingredient':
-                    // Navigasi ke halaman bahan
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -160,18 +142,37 @@ class _HomePageState extends State<HomePage> {
           } else if (snapshot.hasData && snapshot.data!.meals != null) {
             _mealsList = snapshot.data!.meals!;
             _filteredMealsList = _filteredMealsList ?? _mealsList;
-            return ListView.builder(
-              itemCount: _filteredMealsList?.length ?? 0,
-              itemBuilder: (context, index) {
-                Meals meal = _filteredMealsList![index];
-                return ListTile(
-                  leading: meal.strMealThumb != null
-                      ? Image.network(meal.strMealThumb!)
-                      : Icon(Icons.local_dining),
-                  title: Text(meal.strMeal ?? ''),
-                  subtitle: Text(meal.strCategory ?? ''),
-                );
-              },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search meals...',
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _filteredMealsList?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      Meals meal = _filteredMealsList![index];
+                      return ListTile(
+                        leading: meal.strMealThumb != null
+                            ? Image.network(meal.strMealThumb!)
+                            : Icon(Icons.local_dining),
+                        title: Text(meal.strMeal ?? ''),
+                        subtitle: Text(meal.strCategory ?? ''),
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             return Center(child: Text('No meals found.'));
@@ -204,7 +205,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.brown,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed, // Ensure labels are always shown
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

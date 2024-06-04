@@ -21,8 +21,17 @@ class _ListCategoryState extends State<ListCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Categories'),
+        title: Text(
+          'Categories',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<ListCategoryModel>(
         future: _futureCategories,

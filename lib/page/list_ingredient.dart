@@ -8,7 +8,16 @@ class ListIngredientPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ingredients'),
+        title: Text(
+          'Ingredients',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<ListIngredientsModel>(
         future: ApiDataSource().listIngredient(),

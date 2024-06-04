@@ -12,7 +12,16 @@ class FilteredIngredientsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meals with $ingredient'),
+        title: Text(
+          'Meals with $ingredient',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: FutureBuilder<FilterIngredientsModel>(
         future: ApiDataSource().filterByIngredient(ingredient),

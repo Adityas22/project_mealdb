@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
           "REGISTER MENU",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF1B1A55),
+        backgroundColor: Colors.brown,
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),

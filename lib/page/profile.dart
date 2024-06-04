@@ -5,28 +5,34 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile Page'),
-        backgroundColor: Colors.blue, // Warna latar belakang appbar
+        title: Text(
+          'Profile',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.brown,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: ListView(
         children: [
           ProfileMember(
             name: 'Aditya Septiawan',
             nim: '123210014',
-            photoUrl: 'assets/Aditya.jpg', // URL foto
-            color: Colors.orange, // Warna latar belakang widget
+            photoUrl: 'assets/Aditya.jpg',
           ),
           ProfileMember(
             name: 'Muhammad Ihsanuddin',
             nim: '123210039',
-            photoUrl: 'assets/ihsan.jpeg', // URL foto
-            color: Colors.green, // Warna latar belakang widget
+            photoUrl: 'assets/ihsan.jpeg',
           ),
           ProfileMember(
             name: 'Husnan Maulana Suprayitno',
             nim: '123210105',
-            photoUrl: 'assets/husnan.jpeg', // URL foto
-            color: Colors.purple, // Warna latar belakang widget
+            photoUrl: 'assets/husnan.jpeg',
           ),
         ],
       ),
@@ -38,18 +44,16 @@ class ProfileMember extends StatelessWidget {
   final String name;
   final String nim;
   final String photoUrl;
-  final Color color;
 
-  ProfileMember(
-      {required this.name,
-      required this.nim,
-      required this.photoUrl,
-      required this.color});
+  ProfileMember({
+    required this.name,
+    required this.nim,
+    required this.photoUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: color,
       padding: EdgeInsets.all(20.0),
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Column(
